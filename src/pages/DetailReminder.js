@@ -1,12 +1,14 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import Navbar from '../components/Navbar';
 
 function DetailReminder() {
   const { id } = useParams();
   const [timer, setTimer] = useState([]);
   const [inputTime, setInputTime] = useState('')
+  const [searchParams] = useSearchParams()
 
     const getData = async () => {
         let user = JSON.parse(localStorage.getItem('data'));
@@ -32,27 +34,48 @@ function DetailReminder() {
                 headers: { Authorization: `Bearer ${user.token}` }
             }).then(res => {
                 if(res.status == 201){
-                    window.location.href = "/set_reminder"
+                    window.location.href = "/list-reminder"
                 }
             })
         }
         
     }
 
-    const aktifkanButton = () => {
-        console.log("asd");
-    }
 
     const deleteButton = () => {
         let user = JSON.parse(localStorage.getItem('data'));
         axios.delete('https://monitor-pakan-lele-production.up.railway.app/timer/delete-timer/'+id, {
             headers: { Authorization: `Bearer ${user.token}` }
         }).then(res => {
-            if(res.status == 200){
-                window.location.href = "/set_reminder"
-            }
+            return Swal.fire({
+                icon: "question",
+                title: 'Apakah anda yakin akan keluar?',
+                showCancelButton: true,
+                confirmButtonText: 'Ya',
+                cancelButtonText: `Tidak`,
+            }).then((res) => {
+                if(res.status == 200){
+                   if(res.isConfirmed) window.location.href = "/list-reminder"
+                }
+            })
+            
         })
     }
+
+    const aktifkanButton = () => {
+        let user = JSON.parse(localStorage.getItem('data'));
+        axios.put('https://monitor-pakan-lele-production.up.railway.app/kolam/update-kolam/'+ searchParams.get("id"), {timer_id:id}, {
+            headers: { Authorization: `Bearer ${user.token}` },
+        }).then(res => {
+            if(res.status == 200){
+                window.location.href = "/kolam/"+searchParams.get("id")
+            }
+        })
+        
+    }
+
+
+
     return (
         <div className="">
             <div className="fixed w-full">
@@ -62,7 +85,7 @@ function DetailReminder() {
                 <div className="w-full md:w-1/2 lg:w-2/6 bg-slate-50">
                     <div className="h-screen">
                         <div className="flex h-full">
-                            <div className="m-auto w-1/2">
+                            <div className="m-auto w-full px-6">
                                 <div>
                                     <form onSubmit={submitHandler}  className='space-y-5'>
                                         <div className='flex justify-center space-y-5'>
@@ -77,18 +100,18 @@ function DetailReminder() {
                                         </div>
 
                                         <div className='flex justify-center'>
-                                            <input  type="time" name="" id="" value={inputTime} onChange={(e) => setInputTime(e.target.value)} className="w-4/6 py-3 px-6 border border-black rounded" />
+                                            <input  type="time" value={inputTime} onChange={(e) => setInputTime(e.target.value)} className="w-4/6 py-3 px-6 border border-black rounded" />
                                         </div>
 
                                         <div>
-                                            <p className="text-sm text-center">Silahkan input jam dan menit untuk mengatur jeda atau periode reminder, kemudian submit</p>
+                                            {/* <p className="text-sm text-center">Silahkan input jam dan menit untuk mengatur jeda atau periode reminder, kemudian submit</p> */}
                                         </div>
 
-                                        <div className='flex justify-center text-center space-x-3'>
+                                        <div className='grid justify-items-center gap-4 text-center'>
                                             {/* <button type="submit" className="py-3 px-6 bg-violet-500 w-1/2 text-white rounded font-bold">Submit</button> */}
-                                            <div onClick={() => aktifkanButton()} className="cursor-pointer py-3 px-6 bg-violet-500 w-1/2 text-white rounded font-bold">Aktifkan</div>
-                                            <button type='submit' className="py-3 px-6 bg-violet-500 w-1/2 text-white rounded font-bold">Update</button>
-                                            <div onClick={() => deleteButton()} className="cursor-pointer py-3 px-6 bg-violet-500 w-1/2 text-white rounded font-bold">Delete</div>
+                                            <div onClick={() => aktifkanButton()} className="hover:bg-violet-500 py-2 px-12 rounded font-bold hover:text-white cursor-pointer py-3 px-6 bg-violet-500 w-1/2 text-white rounded font-bold">Aktifkan</div>
+                                            <button type='submit' className="hover:bg-violet-500 py-2 px-12 rounded font-bold hover:text-white py-3 px-6 bg-violet-500 w-1/2 text-white rounded font-bold">Update</button>
+                                            <div onClick={() => deleteButton()} className="hover:bg-violet-500 py-2 px-12 rounded font-bold hover:text-white cursor-pointer py-3 px-6 bg-violet-500 w-1/2 text-white rounded font-bold">Delete</div>
 
                                         </div>
                                     </form>

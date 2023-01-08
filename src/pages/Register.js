@@ -1,12 +1,13 @@
 import axios from "axios";
 import React, { useState } from "react";
-import Navbar from "../components/Navbar";
+import Swal from "sweetalert2";
 
 function Register() {
 
   const [nama, setNama] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessages, setErrorMessages] = useState([]);
 
   const formHandler = (e) => {
     e.preventDefault();
@@ -14,10 +15,21 @@ function Register() {
       username: username,
       password: password,
       nama_user: nama,
+      
     }).then((res) => {
-      console.log(res);
+      return Swal.fire({
+        heightAuto: false,
+        icon: "success",
+        title: "Berhasil",
+        text: "Akun berhasil dibuat",
+        confirmButtonColor: "#8B5CF6",
+        confirmButtonText: "Ok",
+    }).then((res) => {
+      if (res.isConfirmed) window.location.href = "/";
+    })
     }).catch((error) => {
-      console.log(error);
+      setErrorMessages(error?.response?.data?.data);
+      // alert(error?.response?.data.message);
   });
   }
 
@@ -27,8 +39,23 @@ function Register() {
         <div className="w-full md:w-1/2 lg:w-2/6 bg-slate-50">
           <div className="h-screen">
             <div className="flex h-full">
-              <div className="m-auto w-1/2">
+              <div className="m-auto w-full px-6">
+                <div className="text-center py-5">
+                  <p className="">REGISTER</p>
+                </div>
                 <div>
+                  {
+                    errorMessages.length !== 0 && (
+                    <div className="text-center bg-red-100 mb-3 text-sm p-4 rounded-md">
+                      {
+                        errorMessages.map((error, index) => (
+                          <p key={index}>{Object.keys(error)[0]}: {Object.values(error)[0]}</p>                                                      
+                        ))
+                      }
+                    </div>
+
+                    )
+                  }
                   <form onSubmit={formHandler}  className="space-y-5">
                     {/* <p className="text-xl text-center text-">
                       Monitor Pakan Ikan Lele

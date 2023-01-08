@@ -1,14 +1,26 @@
 import React, { useEffect, useState } from "react";
-import {Transition, Dialog} from "@headlessui/react";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 export default function Navbar(props) {
     const [open, setOpen] = useState(false);
     const [user, setUser] = useState({});
 
     const logoutButton = () => {
-      localStorage.removeItem('data');
-      window.location.href = "/"
+      Swal.fire({
+        icon: "question",
+        title: 'Apakah anda yakin akan keluar?',
+        showCancelButton: true,
+        confirmButtonText: 'Ya',
+        cancelButtonText: `Tidak`,
+      }).then((result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+          localStorage.removeItem('data');
+          window.location.href = "/"
+        }
+      })
+      
     }
 
  

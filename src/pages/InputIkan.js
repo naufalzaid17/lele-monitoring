@@ -1,7 +1,40 @@
-import React from 'react'
+import axios from 'axios';
+import React, { useState } from 'react'
+import Swal from 'sweetalert2';
 import Navbar from '../components/Navbar'
 
 function InputIkan() {
+  const [umurIkan, setUmurIkan] = useState('');
+  const [beratIkan, setBeratIkan] = useState('');
+  const [sizeIkan, setSizeIkan] = useState('');
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+    
+    let user = JSON.parse(localStorage.getItem('data'));
+    axios.post('https://monitor-pakan-lele-production.up.railway.app/ikan/input-ikan', {
+      umur : umurIkan,
+      berat : beratIkan,
+      ukuran : sizeIkan
+    },{
+      headers: { Authorization: `Bearer ${user.token}` }
+    }).then(res => {
+      console.log(res);
+      if(res.status == 200){
+        return Swal.fire({
+            heightAuto: false,
+            icon: "success",
+            title: "Berhasil",
+            text: "Reminder berhasil ditambahkan",
+            confirmButtonColor: "#8B5CF6",
+            confirmButtonText: "Ok",
+        }).then((res) => {
+            if (res.isConfirmed) window.location.href = "/list-ikan";
+        });
+    }
+    })
+  }
+
   return (
     <div className="">
         <div className="fixed w-full">
@@ -11,31 +44,29 @@ function InputIkan() {
             <div className="w-full md:w-1/2 lg:w-2/6 bg-slate-50">
                 <div className="h-screen">
                   <div className="flex h-full">
-                    <div className="m-auto w-full">
+                    <div className="m-auto w-full px-6">
                       <div>
-                        <form action="" method="post" >
-                          <div className='space-y-8 w-4/6 m-auto'>
-                            <div>
-                              <label htmlFor="umur"></label>
-                              <input type="text" name="umur" id="" className="border border-black rounded w-full py-3 px-6" placeholder='Masukan Umur Ikan'/>
-                            </div>
-                            <div>
-                              <label htmlFor="berat"></label>
-                              <input type="text" name="berat" id="" className="border border-black rounded w-full py-3 px-6" placeholder='Masukan Berat Ikan'/>
-                            </div>
-                            <div>
-                              <label htmlFor="umur"></label>
-                              <input type="text" name="umur" id="" className="border border-black rounded w-full py-3 px-6" placeholder='Masukan Ukuran Ikan'/>
-                            </div>
+                        <form onSubmit={submitHandler} className='space-y-5' >
 
-                          </div>
-                          <div className="fixed w-full md:w-1/2 bg-white py-2 bottom-0">
+                        <h1 className='text-xl text-center'> INPUT IKAN </h1>
+                        <div>
+                            <label htmlFor="umurIkan" className="umurIkan"></label>
+                            <input type="text" value={umurIkan} required onChange={(e) => setUmurIkan(e.target.value)} className="w-full py-3 px-6 border border-black rounded" placeholder='Umur Ikan'/>
+                        </div>  
 
-                          <div className='text-center botttom-0 mb-2'>
-                            {/* <button type="submit" className="border border-violet-500 text-violet-500  hover:bg-violet-500 py-2 px-5 rounded font-bold hover:text-white">Submit</button> */}
-                            <a href='/list_ikan' className="border border-violet-500 text-violet-500  hover:bg-violet-500 py-2 px-5 rounded font-bold hover:text-white">Submit</a>
-                          </div>
-                          </div>
+                        <div>
+                            <label htmlFor="BeratIkan" className="BeratIkan"></label>
+                            <input type="text" value={beratIkan} required onChange={(e) => setBeratIkan(e.target.value)} className="w-full py-3 px-6 border border-black rounded" placeholder='Berat Ikan'/>
+                        </div>  
+
+                        <div>
+                            <label htmlFor="sizeIkan" className="sizeIkan"></label>
+                            <input type="text" value={sizeIkan} required onChange={(e) => setSizeIkan(e.target.value)} className="w-full py-3 px-6 border border-black rounded" placeholder='Ukuran Ikan'/>
+                        </div>
+
+                        <div>
+                            <button type="submit" className="py-3 px-6 bg-violet-500 w-full text-white rounded">Submit</button>
+                        </div>
                           
                         </form>
                       </div>
