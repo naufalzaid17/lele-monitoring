@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import Swal from 'sweetalert2';
 import Navbar from '../components/Navbar';
 
 function DetailIkan() {
@@ -26,7 +27,16 @@ function DetailIkan() {
         }).then(res => {
             console.log(res);
             if(res.status == 200){
-                window.location.href = "/list-ikan"
+                return Swal.fire({
+                    heightAuto: false,
+                    icon: "success",
+                    title: "Berhasil",
+                    text: "Ikan berhasil dihapus",
+                    confirmButtonColor: "#8B5CF6",
+                    confirmButtonText: "Ok",
+                }).then((res) => {
+                    if (res.isConfirmed) window.location.href = "/list-ikan";
+                });
             }
         })
     }
@@ -45,11 +55,12 @@ function DetailIkan() {
     const checkKesehatanIkan = () => {
         
         let user = JSON.parse(localStorage.getItem('data'));
-        const data = axios.post('https://monitor-pakan-lele-production.up.railway.app/ikan/hitung-ikan/'+id,{
+        axios.post('https://monitor-pakan-lele-production.up.railway.app/ikan/hitung-ikan/'+id,{},{
             headers: { Authorization: `Bearer ${user.token}` },
         }).then(res => {
-            console.log(data);
-            console.log(res);
+            if(res.status == 200){
+                return Swal.fire(`${res.data?.message}`)
+            }
         })
     }
 
@@ -77,19 +88,19 @@ function DetailIkan() {
                                                     <div className="text-center col-span-2">Umur Ikan</div>
                                                     <div className="text-center ">:</div>
                                                     <div className="text-center col-span-4">
-                                                        {data.umur}
+                                                        {data.umur} bulan
                                                     </div>
                                                     
                                                     <div className="text-center col-span-2">Berat Ikan</div>
                                                     <div className="text-center ">:</div>
                                                     <div className="text-center col-span-4">
-                                                        {data.berat}
+                                                        {data.berat} kg
                                                     </div>
                                                     
                                                     <div className="text-center col-span-2">Ukuran Ikan</div>
                                                     <div className="text-center ">:</div>
                                                     <div className="text-center col-span-4">
-                                                        {data.ukuran}
+                                                        {data.ukuran} cm
                                                     </div>
 
 
@@ -97,7 +108,7 @@ function DetailIkan() {
                                                     <div className="text-center ">:</div>
                                                     <div className="text-center col-span-4">
                                                         {
-                                                            <button onClick={() => checkKesehatanIkan()}>check</button>
+                                                            <button className='border border-violet-500 text-violet-500  hover:bg-violet-500 rounded font-bold hover:text-white' onClick={() => checkKesehatanIkan()}>check</button>
                                                         }
                                                     </div>
                                                 </div>

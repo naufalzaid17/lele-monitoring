@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import Swal from 'sweetalert2';
 import Navbar from '../components/Navbar';
 
 function EditIkan() {
@@ -32,7 +33,16 @@ function EditIkan() {
         }).then(res => {
             console.log(res);
             if(res.status == 200){
-                window.location.href = "/ikan/"+id
+                return Swal.fire({
+                    heightAuto: false,
+                    icon: "success",
+                    title: "Berhasil",
+                    text: "Ikan berhasil diupdate",
+                    confirmButtonColor: "#8B5CF6",
+                    confirmButtonText: "Ok",
+                }).then((res) => {
+                    if (res.isConfirmed) window.location.href = "/ikan/"+id;
+                });
             }
         })
     }
@@ -55,17 +65,17 @@ function EditIkan() {
                                     <h1 className='text-xl text-center'> EDIT Ikan </h1>
                                     <div>
                                         <label htmlFor="umurIkan" className="umurIkan"></label>
-                                        <input type="text" value={umurIkan} onChange={(e) => setUmurIkan(e.target.value)} className="w-full py-3 px-6 border border-black rounded" placeholder='Umur Ikan'/>
+                                        <input required type="text" value={umurIkan} onChange={(e) => setUmurIkan(e.target.value)} className="w-full py-3 px-6 border border-black rounded" placeholder='Umur Ikan'/>
                                     </div>  
 
                                     <div>
                                         <label htmlFor="beratIkan" className="beratIkan"></label>
-                                        <input type="text" value={beratIkan} onChange={(e) => setBeratIkan(e.target.value)} className="w-full py-3 px-6 border border-black rounded" placeholder='Berat Ikan'/>
+                                        <input required type="text" value={beratIkan} onChange={(e) => setBeratIkan(e.target.value)} className="w-full py-3 px-6 border border-black rounded" placeholder='Berat Ikan'/>
                                     </div>  
 
                                     <div>
                                         <label htmlFor="sizeIkan" className="sizeIkan"></label>
-                                        <input type="text" value={sizeIkan} onChange={(e) => setSizeIkan(e.target.value)} className="w-full py-3 px-6 border border-black rounded" placeholder='Ukuran Ikan'/>
+                                        <input required type="text" value={sizeIkan} onChange={(e) => setSizeIkan(e.target.value)} className="w-full py-3 px-6 border border-black rounded" placeholder='Ukuran Ikan'/>
                                     </div>
 
                                     <div>

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useParams, useNavigate, createSearchParams } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import Navbar from '../components/Navbar'
 
 function DetailKolam() {
@@ -30,7 +31,16 @@ function DetailKolam() {
         }).then(res => {
             console.log(res);
             if(res.status == 200){
-                window.location.href = "/list-kolam"
+                return Swal.fire({
+                    heightAuto: false,
+                    icon: "success",
+                    title: "Berhasil",
+                    text: "Reminder berhasil dihapus",
+                    confirmButtonColor: "#8B5CF6",
+                    confirmButtonText: "Ok",
+                }).then((res) => {
+                    if (res.isConfirmed) window.location.href = "/list-kolam";
+                });
             }
         })
     }
@@ -38,10 +48,19 @@ function DetailKolam() {
     const hitungPakan = (e) => {
         let users = JSON.parse(localStorage.getItem('data'));
         console.log(users);
-        axios.put('https://monitor-pakan-lele-production.up.railway.app/kolam/hitung-pakan/'+id, {
+        axios.put('https://monitor-pakan-lele-production.up.railway.app/kolam/hitung-pakan/'+id, {},{
             headers: { Authorization: `Bearer ${users.token}` }
         }).then(res => {
-            console.log(res);
+            if(res.status == 200){
+                return Swal.fire({
+                    heightAuto: false,
+                    icon: "success",
+                    title: "Berhasil",
+                    text: "Kolam berhasil ditambahkan",
+                    confirmButtonColor: "#8B5CF6",
+                    confirmButtonText: "Ok",
+                })
+            }
         })
     }
 
@@ -101,7 +120,7 @@ function DetailKolam() {
                                                         <div className="text-center col-span-5">jumlah pangan</div>
                                                         <div className="text-center col-span-1">:</div>            
                                                         <div className="text-center col-span-3">
-                                                        {data.jumlah_pangan ? data.jumlah_pangan : 
+                                                        {data.jumlah_pangan ? data.jumlah_pangan+ ' kg' : 
                                                             <button className='text-sm text-center border border-violet-500 text-violet-500  hover:bg-violet-500 rounded font-bold hover:text-white'
                                                                 onClick={() => hitungPakan()}> 
                                                                 hitung pangan

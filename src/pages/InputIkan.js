@@ -25,7 +25,7 @@ function InputIkan() {
             heightAuto: false,
             icon: "success",
             title: "Berhasil",
-            text: "Reminder berhasil ditambahkan",
+            text: "Ikan berhasil ditambahkan",
             confirmButtonColor: "#8B5CF6",
             confirmButtonText: "Ok",
         }).then((res) => {

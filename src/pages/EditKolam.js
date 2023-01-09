@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import Swal from 'sweetalert2';
 import Navbar from '../components/Navbar';
 
 function EditKolam() {
@@ -32,7 +33,16 @@ function EditKolam() {
         }).then(res => {
             console.log(res);
             if(res.status == 200){
-                window.location.href = "/kolam/"+id
+                return Swal.fire({
+                    heightAuto: false,
+                    icon: "success",
+                    title: "Berhasil",
+                    text: "Kolam berhasil diupdate",
+                    confirmButtonColor: "#8B5CF6",
+                    confirmButtonText: "Ok",
+                }).then((res) => {
+                    if (res.isConfirmed) window.location.href = "/kolam/"+id;
+                });
             }
         })
     }
@@ -55,17 +65,17 @@ function EditKolam() {
                                     <h1 className='text-xl text-center'> EDIT KOLAM </h1>
                                     <div>
                                         <label htmlFor="jumlahLele" className="jumlahLele"></label>
-                                        <input type="text" value={jumlahLele} onChange={(e) => setJumlahLele(e.target.value)} className="w-full py-3 px-6 border border-black rounded" placeholder='Jumlah Lele'/>
+                                        <input required type="text" value={jumlahLele} onChange={(e) => setJumlahLele(e.target.value)} className="w-full py-3 px-6 border border-black rounded" placeholder='Jumlah Lele'/>
                                     </div>  
 
                                     <div>
                                         <label htmlFor="avgBerat" className="avgBerat"></label>
-                                        <input type="text" value={avgBerat} onChange={(e) => setAvgBerat(e.target.value)} className="w-full py-3 px-6 border border-black rounded" placeholder='Jumlah Berat rata-rata'/>
+                                        <input required type="text" value={avgBerat} onChange={(e) => setAvgBerat(e.target.value)} className="w-full py-3 px-6 border border-black rounded" placeholder='Jumlah Berat rata-rata'/>
                                     </div>  
 
                                     <div>
                                         <label htmlFor="luasKolam" className="luasKolam"></label>
-                                        <input type="text" value={luasKolam} onChange={(e) => setLuasKolam(e.target.value)} className="w-full py-3 px-6 border border-black rounded" placeholder='Luas Kolam Lele'/>
+                                        <input required type="text" value={luasKolam} onChange={(e) => setLuasKolam(e.target.value)} className="w-full py-3 px-6 border border-black rounded" placeholder='Luas Kolam Lele'/>
                                     </div>
 
                                     <div>

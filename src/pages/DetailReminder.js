@@ -24,20 +24,27 @@ function DetailReminder() {
 
     const submitHandler = (e) =>{
         e.preventDefault();
-        if(inputTime === ""){
-            alert('tidak boleh kosong')
-        }else{
-            let user = JSON.parse(localStorage.getItem('data'));
-            axios.put('https://monitor-pakan-lele-production.up.railway.app/timer/update-timer/'+id, {
-                waktu: inputTime   
-            },{
-                headers: { Authorization: `Bearer ${user.token}` }
-            }).then(res => {
-                if(res.status == 201){
-                    window.location.href = "/list-reminder"
-                }
-            })
-        }
+        
+        let user = JSON.parse(localStorage.getItem('data'));
+        axios.put('https://monitor-pakan-lele-production.up.railway.app/timer/update-timer/'+id, {
+            waktu: inputTime   
+        },{
+            headers: { Authorization: `Bearer ${user.token}` }
+        }).then(res => {
+            if(res.status == 201){
+                return Swal.fire({
+                    heightAuto: false,
+                    icon: "success",
+                    title: "Berhasil",
+                    text: "Reminder berhasil diupdate",
+                    confirmButtonColor: "#8B5CF6",
+                    confirmButtonText: "Ok",
+                }).then((res) => {
+                    if (res.isConfirmed) window.location.href = "/list-reminder";
+                });
+            }
+        })
+        
         
     }
 
@@ -47,17 +54,18 @@ function DetailReminder() {
         axios.delete('https://monitor-pakan-lele-production.up.railway.app/timer/delete-timer/'+id, {
             headers: { Authorization: `Bearer ${user.token}` }
         }).then(res => {
-            return Swal.fire({
-                icon: "question",
-                title: 'Apakah anda yakin akan keluar?',
-                showCancelButton: true,
-                confirmButtonText: 'Ya',
-                cancelButtonText: `Tidak`,
-            }).then((res) => {
-                if(res.status == 200){
-                   if(res.isConfirmed) window.location.href = "/list-reminder"
-                }
-            })
+            if(res.status == 200){
+                return Swal.fire({
+                    heightAuto: false,
+                    icon: "success",
+                    title: "Berhasil",
+                    text: "Reminder berhasil dihapus",
+                    confirmButtonColor: "#8B5CF6",
+                    confirmButtonText: "Ok",
+                }).then((res) => {
+                    if (res.isConfirmed) window.location.href = "/list-reminder";
+                });
+            }
             
         })
     }

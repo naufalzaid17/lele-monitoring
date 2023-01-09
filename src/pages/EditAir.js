@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import Navbar from '../components/Navbar';
 
 function EditAir() {
@@ -32,7 +33,16 @@ function EditAir() {
         }).then(res => {
             console.log(res);
             if(res.status == 200){
-                window.location.href = "/air/"+id
+                return Swal.fire({
+                    heightAuto: false,
+                    icon: "success",
+                    title: "Berhasil",
+                    text: "Air berhasil diupdate",
+                    confirmButtonColor: "#8B5CF6",
+                    confirmButtonText: "Ok",
+                }).then((res) => {
+                    if (res.isConfirmed) window.location.href = "/air/"+id;
+                });
             }
         })
     }
@@ -52,20 +62,20 @@ function EditAir() {
                         <div className="m-auto w-full px-6">
                             <div className="">
                                 <form onSubmit={updateData} className='space-y-5'>
-                                    <h1 className='text-xl text-center'> EDIT air </h1>
+                                    <h1 className='text-xl text-center'> EDIT AIR </h1>
                                     <div>
                                         <label htmlFor="Phair" className="Phair"></label>
-                                        <input type="text" value={phAir} onChange={(e) => setPhAir(e.target.value)} className="w-full py-3 px-6 border border-black rounded" placeholder='Ph Air'/>
+                                        <input required type="text" value={phAir} onChange={(e) => setPhAir(e.target.value)} className="w-full py-3 px-6 border border-black rounded" placeholder='Ph Air'/>
                                     </div>  
 
                                     <div>
                                         <label htmlFor="kadarAir" className="kadarAir"></label>
-                                        <input type="text" value={kadarAir} onChange={(e) => setKadarAir(e.target.value)} className="w-full py-3 px-6 border border-black rounded" placeholder='Kadar Air'/>
+                                        <input required type="text" value={kadarAir} onChange={(e) => setKadarAir(e.target.value)} className="w-full py-3 px-6 border border-black rounded" placeholder='Kadar Air'/>
                                     </div>  
 
                                     <div>
                                         <label htmlFor="warnaAir" className="warnaAir"></label>
-                                        <input type="text" value={warnaAir} onChange={(e) => setWarnaAir(e.target.value)} className="w-full py-3 px-6 border border-black rounded" placeholder='Warna Air'/>
+                                        <input required type="text" value={warnaAir} onChange={(e) => setWarnaAir(e.target.value)} className="w-full py-3 px-6 border border-black rounded" placeholder='Warna Air'/>
                                     </div>
 
                                     <div>
